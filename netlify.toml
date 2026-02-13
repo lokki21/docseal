@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[headers]]
+  for = "/*.jsx"
+  [headers.values]
+    Content-Type = "application/javascript"
+```
+
+Actually wait — the real issue is different. The error says it's trying to load `/src/main.jsx` directly, which means the build didn't actually compile the React code. Let me check something.
+
+Can you go to your Netlify deploy log and look for the **build output**? Specifically, do you see lines like:
+```
+vite build
+dist/index.html
+dist/assets/index-xxxxx.js
