@@ -259,7 +259,6 @@ export default function DocumentAuthenticator() {
     setProcessing(false);
   }, [registerPdf]);
 
-  // Wrapped openers that validate identity first
   const tryOpenPdfPicker = () => {
     if (!validateIdentity()) return;
     fileInputRef.current?.click();
@@ -383,7 +382,6 @@ export default function DocumentAuthenticator() {
         </div>
       )}
 
-      {/* Capture mode UI */}
       {mode === "capture" && !result && !processing && (
         <div style={styles.captureWrap}>
           <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={onImageFileSelect} style={{ display: "none" }} />
@@ -405,7 +403,6 @@ export default function DocumentAuthenticator() {
         </div>
       )}
 
-      {/* PDF dropzone for register/verify */}
       {(mode === "register" || mode === "verify") && !result && (
         <div
           onDrop={onDrop}
@@ -592,4 +589,3 @@ const styles = {
   footer: { marginTop: 48, zIndex: 1 },
   footerText: { fontSize: 11, color: "#2a3148", fontFamily: "'DM Mono', monospace", textAlign: "center", letterSpacing: "0.5px" },
 };
-
