@@ -9,6 +9,8 @@ const T = {
   es: {
     appSubtitle: "Autenticador criptográfico de documentos",
     cloudConnected: "Conectado a la base de datos",
+
+    // Welcome screen
     welcomeTitle: "¿Qué es DocSeal?",
     welcomeIntro: "DocSeal es una herramienta para garantizar la autenticidad de pólizas y documentos. Cada documento recibe una huella criptográfica única, registrada en una base verificable desde cualquier dispositivo.",
     welcomeQ1: "¿Qué es la huella criptográfica?",
@@ -22,6 +24,8 @@ const T = {
     welcomeStep3Body: "La entidad contratante sube el PDF recibido. Si la huella coincide con el registro original, el documento es auténtico.",
     welcomeNote: "Los archivos nunca se suben al servidor. La huella se calcula localmente en tu navegador.",
     welcomeStart: "Comenzar",
+
+    // Role selection
     welcomeBack: "Bienvenido",
     chooseRole: "¿Cuál es su rol?",
     issuerTitle: "Soy Aseguradora",
@@ -30,6 +34,8 @@ const T = {
     verifierTitle: "Soy Entidad Contratante",
     verifierSubtitle: "Verificador / Beneficiario",
     verifierDesc: "Verifique si una póliza presentada por un contratista es auténtica o ha sido alterada.",
+
+    // Issuer flow
     backToRoles: "Cambiar de rol",
     issuerFlowTitle: "Aseguradora",
     issuerFlowDesc: "Identifíquese, luego suba el PDF original o tome una foto del documento.",
@@ -50,15 +56,21 @@ const T = {
     takePhoto: "Tomar una foto",
     pickImage: "Elegir imagen del dispositivo",
     captureHint: "En móvil, \"Tomar una foto\" abre la cámara. Las imágenes se convierten a un PDF canónico antes de calcular la huella.",
+
+    // Verifier flow
     verifierFlowTitle: "Entidad Contratante",
     verifierFlowDesc: "Identifíquese, luego suba el PDF recibido del contratista para verificar su autenticidad. Cada verificación queda registrada para auditoría.",
     dropPdfVerify: "Suelte el PDF a verificar o",
     verifySubtext: "Procesado localmente · Resultado registrado para auditoría",
+
+    // Processing
     computingHash: "Calculando huella SHA-256...",
     buildingPdf: "Generando PDF desde imagen...",
     registering: "Registrando en la base de datos...",
     checking: "Comprobando en el registro...",
     working: "Procesando...",
+
+    // Results
     registeredOk: "¡Documento registrado exitosamente!",
     alreadyRegistered: "Este documento ya está registrado.",
     authentic: "¡Documento auténtico!",
@@ -79,14 +91,33 @@ const T = {
     invalidImage: "Por favor seleccione una imagen (JPG o PNG).",
     connectionError: "Error de conexión: ",
     genericError: "Error: ",
+
+    // Footer
     recentRegistry: "Registro reciente",
     footerText: "SHA-256 · Procesamiento local · Registro en la nube · Verificaciones auditadas",
+
+    // Tooltips
     infoTooltip: "¿Qué es DocSeal?",
     langTooltip: "English",
+
+    // Blockchain
+    anchorBtn: "Anclar en blockchain",
+    anchoring: "Anclando en Base…",
+    anchoredOk: "Anclado en Base (blockchain)",
+    anchoredAlready: "Ya estaba anclado en Base",
+    anchorView: "Ver prueba en BaseScan →",
+    anchorError: "No se pudo anclar en blockchain. El registro local sigue siendo válido.",
+    anchorExplain: "Ancla la huella en la blockchain de Base: un registro público e inmutable que nadie —ni nosotros— puede modificar.",
+    onchainCheck: "Verificar en blockchain",
+    onchainChecking: "Consultando Base…",
+    onchainYes: "Confirmado en Base ✓",
+    onchainNo: "No está anclado en Base",
+    onchainView: "Ver en BaseScan →",
   },
   en: {
     appSubtitle: "Cryptographic Document Authenticator",
     cloudConnected: "Connected to cloud database",
+
     welcomeTitle: "What is DocSeal?",
     welcomeIntro: "DocSeal is a tool for guaranteeing the authenticity of policies and documents. Each document gets a unique cryptographic fingerprint, recorded in a database verifiable from any device.",
     welcomeQ1: "What is the cryptographic fingerprint?",
@@ -100,6 +131,7 @@ const T = {
     welcomeStep3Body: "The contracting entity uploads the received PDF. If the fingerprint matches the original record, the document is authentic.",
     welcomeNote: "Files are never uploaded to the server. The fingerprint is computed locally in your browser.",
     welcomeStart: "Get started",
+
     welcomeBack: "Welcome",
     chooseRole: "What is your role?",
     issuerTitle: "I'm an Insurer",
@@ -108,6 +140,7 @@ const T = {
     verifierTitle: "I'm a Contracting Entity",
     verifierSubtitle: "Verifier / Beneficiary",
     verifierDesc: "Verify whether a policy presented by a contractor is authentic or has been altered.",
+
     backToRoles: "Change role",
     issuerFlowTitle: "Insurer",
     issuerFlowDesc: "Identify yourself, then upload the original PDF or take a photo of the document.",
@@ -128,15 +161,18 @@ const T = {
     takePhoto: "Take a photo",
     pickImage: "Pick image from device",
     captureHint: "On mobile, \"Take a photo\" opens the camera. Images are converted to a canonical PDF before fingerprinting.",
+
     verifierFlowTitle: "Contracting Entity",
     verifierFlowDesc: "Identify yourself, then upload the PDF received from the contractor to check authenticity. Every verification is logged for audit.",
     dropPdfVerify: "Drop the PDF to verify or",
     verifySubtext: "Processed locally · Result logged for audit",
+
     computingHash: "Computing SHA-256 fingerprint...",
     buildingPdf: "Generating PDF from image...",
     registering: "Registering to database...",
     checking: "Checking against registry...",
     working: "Working...",
+
     registeredOk: "Document registered successfully!",
     alreadyRegistered: "This document is already registered.",
     authentic: "Document is authentic!",
@@ -157,13 +193,30 @@ const T = {
     invalidImage: "Please select an image (JPG or PNG).",
     connectionError: "Connection error: ",
     genericError: "Error: ",
+
     recentRegistry: "Recent Registry",
     footerText: "SHA-256 · Local processing · Cloud-synced registry · Verifications audited",
+
     infoTooltip: "What is DocSeal?",
     langTooltip: "Español",
+
+    // Blockchain
+    anchorBtn: "Anchor on blockchain",
+    anchoring: "Anchoring on Base…",
+    anchoredOk: "Anchored on Base (blockchain)",
+    anchoredAlready: "Already anchored on Base",
+    anchorView: "View proof on BaseScan →",
+    anchorError: "Could not anchor on blockchain. The local record is still valid.",
+    anchorExplain: "Anchors the fingerprint on the Base blockchain: a public, immutable record that nobody — not even us — can alter.",
+    onchainCheck: "Check on blockchain",
+    onchainChecking: "Querying Base…",
+    onchainYes: "Confirmed on Base ✓",
+    onchainNo: "Not anchored on Base",
+    onchainView: "View on BaseScan →",
   },
 };
 
+// ================== Supabase helper ==================
 async function supabaseQuery(table, { method = "GET", body, filters } = {}) {
   let url = `${SUPABASE_URL}/rest/v1/${table}`;
   if (filters) url += `?${filters}`;
@@ -182,6 +235,7 @@ async function supabaseQuery(table, { method = "GET", body, filters } = {}) {
   return res.json();
 }
 
+// ================== Crypto + file helpers ==================
 async function hashBytes(bytes) {
   const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -235,12 +289,42 @@ function formatDate(iso, lang) {
   return new Date(iso).toLocaleString(locale, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 function truncateHash(h) { return h.slice(0, 12) + "..." + h.slice(-12); }
+
+// ================== Blockchain helpers ==================
+// Llaman a las Netlify Functions. La clave privada del operador vive
+// solo en el servidor (variables de entorno), nunca en el navegador.
+async function anchorOnChain(hash) {
+  const res = await fetch("/.netlify/functions/register-onchain", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ hash }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Error ${res.status}`);
+  }
+  return res.json(); // { status, txHash, explorerUrl, ... }
+}
+
+async function checkOnChain(hash) {
+  const res = await fetch("/.netlify/functions/verify-onchain", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ hash }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Error ${res.status}`);
+  }
+  return res.json(); // { exists, timestamp, registrar, contractUrl }
+}
 function formatFileSize(bytes) {
   if (bytes < 1024) return bytes + " B";
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
   return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 }
 
+// ================== Icons ==================
 const ShieldIcon = ({ size = 24 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>);
 const UploadIcon = ({ size = 40 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>);
 const CameraIcon = ({ size = 40 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>);
@@ -259,8 +343,12 @@ const IssuerIcon = ({ size = 32 }) => (<svg width={size} height={size} viewBox="
 const VerifierIcon = ({ size = 32 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>);
 const InfoIcon = ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>);
 const GlobeIcon = ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>);
+const LinkIcon = ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>);
+const CubeIcon = ({ size = 18 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>);
 
+// ================== App ==================
 export default function DocumentAuthenticator() {
+  // Language: default Spanish, persisted
   const [lang, setLang] = useState(() => {
     try {
       const stored = localStorage.getItem("docseal_lang");
@@ -269,21 +357,30 @@ export default function DocumentAuthenticator() {
   });
   const t = T[lang];
 
+  // Welcome screen: shown on first visit, persisted as "seen"
   const [showWelcome, setShowWelcome] = useState(() => {
     try {
       return localStorage.getItem("docseal_welcome_seen") !== "1";
     } catch { return true; }
   });
 
+  // Role: null (role selection) | "issuer" | "verifier"
   const [role, setRole] = useState(null);
+
   const [dragging, setDragging] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingMsg, setProcessingMsg] = useState("");
   const [result, setResult] = useState(null);
+
+  // Blockchain state
+  const [anchorState, setAnchorState] = useState(null); // null | "anchoring" | result obj | { error }
+  const [onchainCheck, setOnchainCheck] = useState(null); // verifier side: null | "checking" | result obj
+
   const [name, setName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [company, setCompany] = useState("");
   const [validationError, setValidationError] = useState("");
+
   const [recentRecords, setRecentRecords] = useState([]);
   const [loadedRecords, setLoadedRecords] = useState(false);
 
@@ -291,10 +388,12 @@ export default function DocumentAuthenticator() {
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
+  // Persist language
   useEffect(() => {
     try { localStorage.setItem("docseal_lang", lang); } catch {}
   }, [lang]);
 
+  // Load recent records
   const loadRecords = useCallback(async () => {
     if (loadedRecords) return;
     try {
@@ -328,8 +427,10 @@ export default function DocumentAuthenticator() {
   };
 
   const openWelcome = () => setShowWelcome(true);
+
   const toggleLang = () => setLang(lang === "es" ? "en" : "es");
 
+  // ===== Issuer =====
   const registerPdf = useCallback(async ({ pdfBytes, pdfBlob, fileName }) => {
     const hash = await hashBytes(pdfBytes);
     const existing = await supabaseQuery("documents", { filters: `hash=eq.${hash}&select=*` });
@@ -394,6 +495,7 @@ export default function DocumentAuthenticator() {
     setProcessing(false);
   }, [registerPdf, t]);
 
+  // ===== Verifier =====
   const handlePdfVerify = useCallback(async (file) => {
     if (!file || file.type !== "application/pdf") {
       setResult({ type: "error", message: t.invalidPdf });
@@ -433,6 +535,7 @@ export default function DocumentAuthenticator() {
     setProcessing(false);
   }, [name, userRole, company, t]);
 
+  // ===== Pickers =====
   const tryOpenPdfRegister = () => { if (!validateIdentity()) return; fileInputRef.current?.click(); };
   const tryOpenCamera = () => { if (!validateIdentity()) return; cameraInputRef.current?.click(); };
   const tryOpenGallery = () => { if (!validateIdentity()) return; galleryInputRef.current?.click(); };
@@ -461,8 +564,32 @@ export default function DocumentAuthenticator() {
   const onPdfRegisterSelect = (e) => { const f = e.target.files?.[0]; if (f) handlePdfRegister(f); e.target.value = ""; };
   const onPdfVerifySelect = (e) => { const f = e.target.files?.[0]; if (f) handlePdfVerify(f); e.target.value = ""; };
   const onImageSelect = (e) => { const f = e.target.files?.[0]; if (f) handleImageRegister(f); e.target.value = ""; };
-  const resetResult = () => { setResult(null); setValidationError(""); };
+  const resetResult = () => { setResult(null); setValidationError(""); setAnchorState(null); setOnchainCheck(null); };
 
+  // ===== Blockchain handlers =====
+  const handleAnchor = useCallback(async (hash) => {
+    setAnchorState("anchoring");
+    try {
+      const res = await anchorOnChain(hash);
+      setAnchorState(res); // { status: "registered"|"already_registered", explorerUrl, ... }
+    } catch (e) {
+      console.error("Anchor failed:", e);
+      setAnchorState({ error: e.message });
+    }
+  }, []);
+
+  const handleCheckOnChain = useCallback(async (hash) => {
+    setOnchainCheck("checking");
+    try {
+      const res = await checkOnChain(hash);
+      setOnchainCheck(res); // { exists, timestamp, registrar, contractUrl }
+    } catch (e) {
+      console.error("On-chain check failed:", e);
+      setOnchainCheck({ error: e.message });
+    }
+  }, []);
+
+  // ============ RENDER ============
   return (
     <div style={styles.container}>
       <div style={styles.bgTexture} />
@@ -487,6 +614,7 @@ export default function DocumentAuthenticator() {
         </div>
       </header>
 
+      {/* ============ WELCOME / EXPLAINER ============ */}
       {showWelcome && (
         <div style={styles.welcomeWrap}>
           <div style={styles.welcomeIconWrap}>
@@ -540,6 +668,7 @@ export default function DocumentAuthenticator() {
         </div>
       )}
 
+      {/* ============ ROLE SELECTION ============ */}
       {!showWelcome && role === null && (
         <div style={styles.roleSelectWrap}>
           <h2 style={styles.flowTitleCenter}>{t.welcomeBack}</h2>
@@ -567,6 +696,7 @@ export default function DocumentAuthenticator() {
         </div>
       )}
 
+      {/* ============ ISSUER ============ */}
       {!showWelcome && role === "issuer" && (
         <>
           <button onClick={goHome} style={styles.backLink}><BackIcon /><span>{t.backToRoles}</span></button>
@@ -635,6 +765,7 @@ export default function DocumentAuthenticator() {
         </>
       )}
 
+      {/* ============ VERIFIER ============ */}
       {!showWelcome && role === "verifier" && (
         <>
           <button onClick={goHome} style={styles.backLink}><BackIcon /><span>{t.backToRoles}</span></button>
@@ -686,6 +817,7 @@ export default function DocumentAuthenticator() {
         </>
       )}
 
+      {/* ============ RESULT ============ */}
       {!showWelcome && result && (
         <div style={{
           ...styles.resultCard,
@@ -732,6 +864,78 @@ export default function DocumentAuthenticator() {
             </button>
           )}
 
+          {/* ===== Blockchain: anclaje (emisor) ===== */}
+          {(result.type === "registered" || result.type === "already") && (result.record?.hash) && (
+            <div style={styles.chainBlock}>
+              {!anchorState && (
+                <>
+                  <button onClick={() => handleAnchor(result.record.hash)} style={styles.anchorBtn}>
+                    <CubeIcon size={16} />
+                    <span style={{ marginLeft: 8 }}>{t.anchorBtn}</span>
+                  </button>
+                  <p style={styles.chainExplain}>{t.anchorExplain}</p>
+                </>
+              )}
+              {anchorState === "anchoring" && (
+                <div style={styles.chainStatusRow}>
+                  <div style={styles.miniSpinner} />
+                  <span style={styles.chainStatusText}>{t.anchoring}</span>
+                </div>
+              )}
+              {anchorState && anchorState.error && (
+                <div style={styles.chainError}>{t.anchorError}</div>
+              )}
+              {anchorState && (anchorState.status === "registered" || anchorState.status === "already_registered") && (
+                <div style={styles.chainSuccess}>
+                  <div style={styles.chainSuccessTitle}>
+                    <CubeIcon size={14} />
+                    <span style={{ marginLeft: 6 }}>
+                      {anchorState.status === "registered" ? t.anchoredOk : t.anchoredAlready}
+                    </span>
+                  </div>
+                  <a href={anchorState.explorerUrl} target="_blank" rel="noopener noreferrer" style={styles.chainLink}>
+                    {t.anchorView}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ===== Blockchain: verificación (verificador) ===== */}
+          {result.type === "authentic" && (result.record?.hash) && (
+            <div style={styles.chainBlock}>
+              {!onchainCheck && (
+                <button onClick={() => handleCheckOnChain(result.record.hash)} style={styles.anchorBtnSecondary}>
+                  <LinkIcon size={16} />
+                  <span style={{ marginLeft: 8 }}>{t.onchainCheck}</span>
+                </button>
+              )}
+              {onchainCheck === "checking" && (
+                <div style={styles.chainStatusRow}>
+                  <div style={styles.miniSpinner} />
+                  <span style={styles.chainStatusText}>{t.onchainChecking}</span>
+                </div>
+              )}
+              {onchainCheck && onchainCheck.error && (
+                <div style={styles.chainError}>{t.anchorError}</div>
+              )}
+              {onchainCheck && onchainCheck.exists === true && (
+                <div style={styles.chainSuccess}>
+                  <div style={styles.chainSuccessTitle}>
+                    <CubeIcon size={14} />
+                    <span style={{ marginLeft: 6 }}>{t.onchainYes}</span>
+                  </div>
+                  <a href={onchainCheck.contractUrl} target="_blank" rel="noopener noreferrer" style={styles.chainLink}>
+                    {t.onchainView}
+                  </a>
+                </div>
+              )}
+              {onchainCheck && onchainCheck.exists === false && (
+                <div style={styles.chainNeutral}>{t.onchainNo}</div>
+              )}
+            </div>
+          )}
+
           <div style={styles.resultActions}>
             <button onClick={resetResult} style={styles.resetBtn}>
               {role === "issuer" ? t.registerAnother : t.verifyAnother}
@@ -741,6 +945,7 @@ export default function DocumentAuthenticator() {
         </div>
       )}
 
+      {/* Registry Log - only on role selection */}
       {!showWelcome && role === null && recentRecords.length > 0 && (
         <div style={styles.registrySection}>
           <h3 style={styles.registryTitle}>{t.recentRegistry}<span style={styles.registryCount}>{recentRecords.length}</span></h3>
@@ -771,6 +976,7 @@ export default function DocumentAuthenticator() {
 const styles = {
   container: { position: "relative", minHeight: "100vh", background: "#0a0f1a", fontFamily: "'Outfit', sans-serif", color: "#c8ceda", padding: "32px 16px", display: "flex", flexDirection: "column", alignItems: "center", overflow: "hidden" },
   bgTexture: { position: "absolute", inset: 0, opacity: 0.03, backgroundImage: "radial-gradient(circle at 25% 25%, #56e39f 1px, transparent 1px), radial-gradient(circle at 75% 75%, #56e39f 1px, transparent 1px)", backgroundSize: "60px 60px", pointerEvents: "none" },
+
   header: { textAlign: "center", marginBottom: 28, zIndex: 1, animation: "fadeIn 0.6s ease-out", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 },
   logoRow: { display: "flex", alignItems: "center", gap: 16 },
   logoIcon: { width: 48, height: 48, borderRadius: 12, background: "linear-gradient(135deg, #56e39f 0%, #2ab673 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#0a0f1a", flexShrink: 0 },
@@ -781,6 +987,8 @@ const styles = {
   headerButtons: { display: "flex", gap: 8 },
   iconBtn: { background: "transparent", border: "1px solid #2a3148", borderRadius: 8, color: "#8892a6", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s ease" },
   langBtn: { background: "transparent", border: "1px solid #2a3148", borderRadius: 8, color: "#8892a6", padding: "5px 10px", cursor: "pointer", display: "flex", alignItems: "center", fontSize: 11, fontFamily: "'DM Mono', monospace", fontWeight: 600, letterSpacing: 1, transition: "all 0.2s ease" },
+
+  // Welcome
   welcomeWrap: { width: "100%", maxWidth: 520, zIndex: 1, animation: "fadeIn 0.5s ease-out", background: "rgba(20, 26, 42, 0.6)", border: "1px solid #1e2740", borderRadius: 16, padding: "28px 24px", boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 },
   welcomeIconWrap: { width: 64, height: 64, borderRadius: 16, background: "linear-gradient(135deg, #56e39f 0%, #2ab673 100%)", color: "#0a0f1a", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 8 },
   welcomeTitle: { fontSize: 26, fontWeight: 600, color: "#e8ecf4", margin: "4px 0 12px", letterSpacing: "-0.3px", textAlign: "center" },
@@ -797,6 +1005,8 @@ const styles = {
   stepDesc: { fontSize: 12, color: "#8892a6", lineHeight: 1.5 },
   welcomeNote: { width: "100%", marginTop: 14, padding: "10px 14px", background: "rgba(86,227,159,0.06)", border: "1px solid rgba(86,227,159,0.18)", borderRadius: 8, fontSize: 11, color: "#56e39f", lineHeight: 1.5, fontFamily: "'DM Mono', monospace", textAlign: "center", boxSizing: "border-box" },
   welcomeBtn: { marginTop: 20, padding: "12px 32px", background: "linear-gradient(135deg, #56e39f 0%, #2ab673 100%)", color: "#0a0f1a", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 600, fontFamily: "'Outfit', sans-serif", cursor: "pointer", transition: "transform 0.2s ease" },
+
+  // Role selection
   roleSelectWrap: { width: "100%", maxWidth: 480, zIndex: 1, animation: "fadeIn 0.5s ease-out", display: "flex", flexDirection: "column", alignItems: "center" },
   flowTitleCenter: { fontSize: 24, fontWeight: 600, color: "#e8ecf4", margin: "8px 0 6px", letterSpacing: "-0.3px", textAlign: "center" },
   welcomeText: { fontSize: 14, color: "#6b7a96", margin: "0 0 28px", fontFamily: "'DM Mono', monospace" },
@@ -807,9 +1017,12 @@ const styles = {
   roleCardTitle: { fontSize: 17, fontWeight: 600, color: "#e8ecf4", margin: "0 0 2px" },
   roleCardSub: { fontSize: 11, color: "#56e39f", marginBottom: 6, fontFamily: "'DM Mono', monospace", letterSpacing: 1, textTransform: "uppercase" },
   roleCardDesc: { fontSize: 13, color: "#8892a6", margin: 0, lineHeight: 1.5 },
+
   flowTitle: { fontSize: 22, fontWeight: 600, color: "#e8ecf4", margin: "4px 0 8px", letterSpacing: "-0.3px", zIndex: 1 },
   backLink: { background: "transparent", border: "none", color: "#5a6580", fontSize: 12, fontFamily: "'DM Mono', monospace", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, marginBottom: 8, padding: "4px 8px", zIndex: 1, transition: "color 0.2s ease" },
+
   modeDescription: { maxWidth: 440, textAlign: "center", fontSize: 14, lineHeight: 1.6, color: "#6b7a96", marginBottom: 24, zIndex: 1, animation: "fadeIn 0.6s ease-out 0.2s both", padding: "0 8px" },
+
   identityCard: { width: "100%", maxWidth: 440, marginBottom: 20, zIndex: 1, animation: "fadeIn 0.4s ease-out", background: "rgba(20, 26, 42, 0.5)", border: "1px solid #1e2740", borderRadius: 12, padding: "16px 18px", boxSizing: "border-box" },
   identityTitle: { fontSize: 12, fontWeight: 600, color: "#6b7a96", margin: "0 0 14px", fontFamily: "'DM Mono', monospace", textTransform: "uppercase", letterSpacing: "1px" },
   fieldGroup: { marginBottom: 12 },
@@ -817,6 +1030,7 @@ const styles = {
   required: { color: "#ef5350" },
   fieldInput: { width: "100%", padding: "10px 12px", background: "#0d1220", border: "1px solid #2a3148", borderRadius: 8, color: "#c8ceda", fontSize: 14, fontFamily: "'Outfit', sans-serif", outline: "none", boxSizing: "border-box", transition: "border-color 0.2s ease" },
   validationErrorBox: { fontSize: 12, color: "#ef5350", marginTop: 8, fontFamily: "'DM Mono', monospace", padding: "8px 10px", background: "rgba(239, 83, 80, 0.08)", border: "1px solid rgba(239, 83, 80, 0.25)", borderRadius: 6 },
+
   captureWrap: { width: "100%", maxWidth: 440, display: "flex", flexDirection: "column", alignItems: "center", gap: 12, zIndex: 1, animation: "fadeIn 0.6s ease-out 0.3s both" },
   dropzone: { width: "100%", padding: "36px 24px", borderRadius: 16, border: "2px dashed", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.3s ease", boxSizing: "border-box" },
   uploadIconWrap: { marginBottom: 12, transition: "color 0.3s ease" },
@@ -825,12 +1039,15 @@ const styles = {
   dropSubtext: { fontSize: 12, color: "#4a5578", margin: 0, fontFamily: "'DM Mono', monospace", textAlign: "center" },
   divider: { width: "100%", display: "flex", alignItems: "center", margin: "4px 0", gap: 12 },
   dividerText: { fontSize: 11, color: "#3d4660", fontFamily: "'DM Mono', monospace", letterSpacing: 2 },
+
   captureBtnPrimary: { width: "100%", padding: "16px 24px", background: "linear-gradient(135deg, #56e39f 0%, #2ab673 100%)", color: "#0a0f1a", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 600, fontFamily: "'Outfit', sans-serif", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, transition: "transform 0.2s ease" },
   captureBtnSecondary: { width: "100%", padding: "14px 24px", background: "rgba(20, 26, 42, 0.5)", color: "#8892a6", border: "1px solid #2a3148", borderRadius: 12, fontSize: 14, fontWeight: 500, fontFamily: "'Outfit', sans-serif", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s ease" },
   captureHint: { fontSize: 12, color: "#4a5578", textAlign: "center", marginTop: 8, fontFamily: "'DM Mono', monospace", lineHeight: 1.5 },
+
   processingCard: { width: "100%", maxWidth: 440, padding: 32, background: "rgba(20, 26, 42, 0.6)", borderRadius: 16, border: "1px solid #1e2740", display: "flex", flexDirection: "column", alignItems: "center", gap: 14, zIndex: 1 },
   spinner: { width: 36, height: 36, border: "3px solid #1e2740", borderTopColor: "#56e39f", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
   processingText: { fontSize: 14, color: "#56e39f", margin: 0, fontFamily: "'DM Mono', monospace", textAlign: "center" },
+
   resultCard: { width: "100%", maxWidth: 440, padding: 24, background: "rgba(20, 26, 42, 0.8)", borderRadius: 16, border: "1px solid", textAlign: "center", zIndex: 1, animation: "fadeIn 0.5s ease-out", backdropFilter: "blur(8px)", boxSizing: "border-box" },
   resultIconWrap: { marginBottom: 16 },
   resultTitle: { fontSize: 20, fontWeight: 600, margin: "0 0 20px" },
@@ -845,6 +1062,7 @@ const styles = {
   resultActions: { display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" },
   resetBtn: { padding: "10px 24px", background: "transparent", border: "1px solid #2a3148", borderRadius: 8, color: "#8892a6", fontSize: 13, fontFamily: "'Outfit', sans-serif", fontWeight: 500, cursor: "pointer", transition: "all 0.2s ease" },
   resetBtnSecondary: { padding: "10px 24px", background: "transparent", border: "1px solid #2a3148", borderRadius: 8, color: "#5a6580", fontSize: 13, fontFamily: "'Outfit', sans-serif", fontWeight: 500, cursor: "pointer", transition: "all 0.2s ease" },
+
   registrySection: { width: "100%", maxWidth: 440, marginTop: 40, zIndex: 1, animation: "fadeIn 0.6s ease-out" },
   registryTitle: { fontSize: 14, fontWeight: 600, color: "#6b7a96", margin: "0 0 12px", display: "flex", alignItems: "center", gap: 8, fontFamily: "'DM Mono', monospace", textTransform: "uppercase", letterSpacing: "1px" },
   registryCount: { background: "#1e2740", color: "#56e39f", fontSize: 11, padding: "2px 8px", borderRadius: 10, fontWeight: 500 },
@@ -856,6 +1074,21 @@ const styles = {
   registryDate: { fontSize: 11, color: "#4a5578", fontFamily: "'DM Mono', monospace" },
   registryHash: { fontSize: 11, color: "#3d7a5a", fontFamily: "'DM Mono', monospace" },
   registryBy: { fontSize: 11, color: "#4a5578", fontFamily: "'DM Mono', monospace" },
+
   footer: { marginTop: 48, zIndex: 1 },
   footerText: { fontSize: 11, color: "#2a3148", fontFamily: "'DM Mono', monospace", textAlign: "center", letterSpacing: "0.5px" },
+
+  // Blockchain UI
+  chainBlock: { width: "100%", marginBottom: 16, paddingTop: 4 },
+  anchorBtn: { width: "100%", padding: "12px 20px", background: "linear-gradient(135deg, #6b8cff 0%, #4361ee 100%)", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontFamily: "'Outfit', sans-serif", fontWeight: 600, cursor: "pointer", transition: "all 0.2s ease", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" },
+  anchorBtnSecondary: { width: "100%", padding: "11px 20px", background: "rgba(107, 140, 255, 0.1)", border: "1px solid rgba(107, 140, 255, 0.35)", borderRadius: 8, color: "#8fa6ff", fontSize: 13, fontFamily: "'Outfit', sans-serif", fontWeight: 500, cursor: "pointer", transition: "all 0.2s ease", display: "flex", alignItems: "center", justifyContent: "center", boxSizing: "border-box" },
+  chainExplain: { fontSize: 11, color: "#5a6580", marginTop: 8, marginBottom: 0, lineHeight: 1.5, textAlign: "center", fontFamily: "'DM Mono', monospace" },
+  chainStatusRow: { display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "10px 0" },
+  miniSpinner: { width: 18, height: 18, border: "2px solid #1e2740", borderTopColor: "#6b8cff", borderRadius: "50%", animation: "spin 0.8s linear infinite" },
+  chainStatusText: { fontSize: 13, color: "#8fa6ff", fontFamily: "'DM Mono', monospace" },
+  chainSuccess: { padding: "12px 14px", background: "rgba(107, 140, 255, 0.08)", border: "1px solid rgba(107, 140, 255, 0.3)", borderRadius: 8, textAlign: "center" },
+  chainSuccessTitle: { fontSize: 13, fontWeight: 600, color: "#8fa6ff", marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Mono', monospace" },
+  chainLink: { fontSize: 12, color: "#8fa6ff", textDecoration: "underline", textUnderlineOffset: 3, fontFamily: "'DM Mono', monospace", wordBreak: "break-all" },
+  chainError: { fontSize: 12, color: "#e0a04d", padding: "10px 14px", background: "rgba(224, 160, 77, 0.08)", border: "1px solid rgba(224, 160, 77, 0.3)", borderRadius: 8, textAlign: "center", lineHeight: 1.4 },
+  chainNeutral: { fontSize: 12, color: "#8892a6", padding: "10px 14px", background: "rgba(136, 146, 166, 0.08)", border: "1px solid rgba(136, 146, 166, 0.25)", borderRadius: 8, textAlign: "center" },
 };
