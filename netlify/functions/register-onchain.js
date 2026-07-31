@@ -1,96 +1,88 @@
-// Netlify Function: registra una huella (hash) en el contrato DocSealRegistry.
-//
-// El cliente NUNCA ve una wallet. Esta función firma con la wallet del operador,
-// que vive solo como variable de entorno en Netlify.
-//
-// Variables de entorno necesarias (Netlify → Site settings → Environment variables):
-//   OPERATOR_PRIVATE_KEY  -> clave privada de la wallet del operador
-//   CONTRACT_ADDRESS      -> dirección del contrato desplegado
-//   RPC_URL               -> https://sepolia.base.org (testnet) o https://mainnet.base.org
-//   CHAIN_ID              -> 84532 (testnet) o 8453 (mainnet)
-//
-// Dependencia: ethers v6  (agregar "ethers" a package.json)
-
+// Netlify Function: ancla una huella en el contrato DocSealRegistry.
+// Requiere sesión de aseguradora (token de Supabase). La clave privada del
+// operador vive solo en variables de entorno del servidor.
+// Env vars: OPERATOR_PRIVATE_KEY, CONTRACT_ADDRESS, RPC_URL, CHAIN_ID,
+//           SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
 const { ethers } = require("ethers");
+const { toBytes32 } = require("./utils/bytes32.js");
 
-// ABI mínimo: solo las funciones que usamos
 const ABI = [
   "function register(bytes32 documentHash) external",
   "function verify(bytes32 documentHash) external view returns (bool exists, uint64 timestamp, address registrar)",
 ];
+const HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Content-Type": "application/json",
+};
 
-// Normaliza un hash SHA-256 (64 hex chars) al formato bytes32 (0x-prefijado)
-function toBytes32(hash) {
-  const clean = hash.startsWith("0x") ? hash.slice(2) : hash;
-  if (!/^[0-9a-fA-F]{64}$/.test(clean)) {
-    throw new Error("El hash debe ser SHA-256 (64 caracteres hexadecimales).");
-  }
-  return "0x" + clean.toLowerCase();
+// Valida el token de sesión del solicitante. Devuelve el user id o null.
+async function validateUser(token) {
+  if (!token) return null;
+  const res = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { apikey: process.env.SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return null;
+  const user = await res.json();
+  return user.id || null;
+}
+
+// Escribe el resultado del anclaje en la fila del documento (service role omite RLS).
+async function updateAnchor(hash, fields) {
+  await fetch(`${process.env.SUPABASE_URL}/rest/v1/documents?hash=eq.${hash}`, {
+    method: "PATCH",
+    headers: {
+      apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(fields),
+  });
 }
 
 exports.handler = async (event) => {
-  // CORS básico
-  const headers = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Content-Type": "application/json",
-  };
-
-  if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers, body: "" };
-  }
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
-  }
+  if (event.httpMethod === "OPTIONS") return { statusCode: 204, headers: HEADERS, body: "" };
+  if (event.httpMethod !== "POST") return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: "Method not allowed" }) };
 
   try {
+    const token = (event.headers.authorization || event.headers.Authorization || "").replace(/^Bearer\s+/i, "");
+    const userId = await validateUser(token);
+    if (!userId) return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: "No autorizado." }) };
+
     const { hash } = JSON.parse(event.body || "{}");
-    if (!hash) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: "Falta el campo 'hash'." }) };
-    }
-
+    if (!hash) return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: "Falta el campo 'hash'." }) };
     const documentHash = toBytes32(hash);
+    const cleanHash = documentHash.slice(2);
 
-    const RPC_URL = process.env.RPC_URL;
-    const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-    const OPERATOR_PRIVATE_KEY = process.env.OPERATOR_PRIVATE_KEY;
+    const { RPC_URL, CONTRACT_ADDRESS, OPERATOR_PRIVATE_KEY } = process.env;
     const CHAIN_ID = parseInt(process.env.CHAIN_ID || "84532", 10);
-
     if (!RPC_URL || !CONTRACT_ADDRESS || !OPERATOR_PRIVATE_KEY) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: "Faltan variables de entorno en el servidor." }) };
+      return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: "Faltan variables de entorno en el servidor." }) };
     }
 
     const provider = new ethers.JsonRpcProvider(RPC_URL, CHAIN_ID);
     const wallet = new ethers.Wallet(OPERATOR_PRIVATE_KEY, provider);
     const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet);
+    const explorerBase = CHAIN_ID === 8453 ? "https://basescan.org" : "https://sepolia.basescan.org";
 
-    // ¿Ya está registrado? (evita gastar gas y da una respuesta clara)
-    const [exists, ts, registrar] = await contract.verify(documentHash);
+    // ¿Ya está anclado? (evita gastar gas)
+    const [exists] = await contract.verify(documentHash);
     if (exists) {
-      const explorerBase = CHAIN_ID === 8453 ? "https://basescan.org" : "https://sepolia.basescan.org";
+      await updateAnchor(cleanHash, { anchor_status: "anchored" });
       return {
         statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          status: "already_registered",
-          hash: documentHash,
-          timestamp: Number(ts),
-          registrar,
-          explorerUrl: `${explorerBase}/address/${CONTRACT_ADDRESS}`,
-        }),
+        headers: HEADERS,
+        body: JSON.stringify({ status: "already_registered", hash: documentHash, explorerUrl: `${explorerBase}/address/${CONTRACT_ADDRESS}` }),
       };
     }
 
-    // Firmar y enviar la transacción
     const tx = await contract.register(documentHash);
-    const receipt = await tx.wait(1); // esperar 1 confirmación
-
-    const explorerBase = CHAIN_ID === 8453 ? "https://basescan.org" : "https://sepolia.basescan.org";
-
+    const receipt = await tx.wait(1);
+    await updateAnchor(cleanHash, { anchor_status: "anchored", anchor_tx: receipt.hash, anchored_at: new Date().toISOString() });
     return {
       statusCode: 200,
-      headers,
+      headers: HEADERS,
       body: JSON.stringify({
         status: "registered",
         hash: documentHash,
@@ -102,10 +94,10 @@ exports.handler = async (event) => {
     };
   } catch (err) {
     console.error("register-onchain error:", err);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: err.message || "Error interno." }),
-    };
+    try {
+      const { hash } = JSON.parse(event.body || "{}");
+      if (hash) await updateAnchor(toBytes32(hash).slice(2), { anchor_status: "failed" });
+    } catch {}
+    return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: "Error interno." }) };
   }
 };
