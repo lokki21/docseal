@@ -17,3 +17,7 @@ Prerequisites: schema migration applied in Supabase (SQL Editor), Netlify env va
 - [ ] Anchor endpoint refuses curl without token (401)
 - [ ] ES/EN toggle works on every page
 - [ ] Anonymous insert into documents is blocked (RLS curl from plan Task 5)
+- [ ] /verify/:id shows the independent-proof section: SHA-256 + BaseScan tx link + trustless note
+- [ ] /verify/:id for an UNANCHORED document honestly shows "Registrado en DocSeal (sin anclaje en blockchain)"
+- [ ] Certificate PDF contains the tx hash AND the BaseScan URL as readable text (not only the QR)
+- [ ] Registration certificate for an unanchored document does NOT claim blockchain anchoring
