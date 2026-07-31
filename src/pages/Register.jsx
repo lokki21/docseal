@@ -4,7 +4,7 @@ import { useLang } from "../i18n/useLang.jsx";
 import { hashBytes } from "../lib/crypto.js";
 import { imageToPdf } from "../lib/imageToPdf.js";
 import { supabaseQuery, currentUserId } from "../lib/supabase.js";
-import { anchorOnChain } from "../lib/onchain.js";
+import { anchorOnChain, txUrl } from "../lib/onchain.js";
 import { generateCertificatePdf } from "../lib/certificate.js";
 import { fmtCertDate, downloadBlob } from "../lib/format.js";
 import Dropzone from "../components/Dropzone.jsx";
@@ -61,13 +61,16 @@ export default function Register() {
     catch { setAnchor({ error: true }); }
   };
 
-  const downloadCert = () => generateCertificatePdf({
-    kind: "registro", lang, archivo: rec.file_name, hash: rec.hash,
-    emisorNombre: "", emisorCargo: "", emisorCompania: "",
-    fechaRegistro: fmtCertDate(rec.registered_at, lang),
-    txHash: anchor?.txHash || null, red: "Base",
-    explorerUrl: anchor?.explorerUrl || null, publicUrl,
-  });
+  const downloadCert = () => {
+    const tx = anchor?.txHash || rec.anchor_tx || null;
+    return generateCertificatePdf({
+      kind: "registro", lang, archivo: rec.file_name, hash: rec.hash,
+      emisorNombre: "", emisorCargo: "", emisorCompania: "",
+      fechaRegistro: fmtCertDate(rec.registered_at, lang),
+      txHash: tx, txExplorerUrl: tx ? txUrl(tx) : null, red: "Base",
+      explorerUrl: anchor?.explorerUrl || null, publicUrl,
+    });
+  };
 
   if (busy) return <Busy msg={busy} />;
 

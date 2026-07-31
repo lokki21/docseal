@@ -78,10 +78,15 @@ export async function generateCertificatePdf(data) {
   y += 34;
   doc.setTextColor(...C.dark); doc.setFont("helvetica", "normal"); doc.setFontSize(10);
   let resumen;
-  if (isReg) {
+  if (isReg && data.txHash) {
     resumen = es
       ? "Esta póliza fue registrada en DocSeal y su huella criptográfica quedó anclada de forma permanente en la blockchain de Base. A partir de esta fecha, cualquier copia idéntica puede verificarse como auténtica; cualquier alteración, por mínima que sea, será detectada."
       : "This policy was registered in DocSeal and its cryptographic fingerprint was permanently anchored on the Base blockchain. From this date, any identical copy can be verified as authentic; any alteration, however small, will be detected.";
+  } else if (isReg) {
+    // Honestidad: sin anclaje on-chain, la constancia no debe afirmar que existe.
+    resumen = es
+      ? "Esta póliza fue registrada en DocSeal (sin anclaje en blockchain). Su huella criptográfica permite detectar cualquier alteración: cualquier copia idéntica puede verificarse como auténtica contra el registro de DocSeal."
+      : "This policy was registered in DocSeal (no blockchain anchor). Its cryptographic fingerprint allows any alteration to be detected: any identical copy can be verified as authentic against the DocSeal registry.";
   } else if (data.autentico) {
     resumen = es
       ? "El documento verificado coincide exactamente con el documento original registrado. No ha sido modificado desde su emisión. Su autenticidad está respaldada por un registro criptográfico público e inalterable."
@@ -171,6 +176,16 @@ export async function generateCertificatePdf(data) {
     doc.setFont("courier", "normal"); doc.setFontSize(7.5); doc.setTextColor(...C.dark);
     const txLines = doc.splitTextToSize(data.txHash, proofW);
     doc.text(txLines, M, yProof + 4);
+    // La URL en texto plano hace la prueba autosuficiente: verificable aunque
+    // docseal.app deje de existir.
+    if (data.txExplorerUrl) {
+      const urlY = yProof + 4 + txLines.length * 3.5 + 2;
+      const urlLines = doc.splitTextToSize(data.txExplorerUrl, proofW);
+      doc.text(urlLines, M, urlY);
+    }
+  } else {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(...C.gray);
+    doc.text(es ? "Registrado en DocSeal (sin anclaje en blockchain)" : "Registered in DocSeal (no blockchain anchor)", M, yProof);
   }
 
   // how to verify

@@ -145,6 +145,10 @@ export const T = {
     profileCompany: "Compañía",
     profileContact: "Nombre de contacto",
     profileRole: "Cargo",
+    proofTitle: "Prueba independiente",
+    proofTxLink: "Ver prueba en blockchain →",
+    proofNote: "Este registro es público e inmutable. Puede verificarse sin depender de DocSeal.",
+    notAnchoredHonest: "Registrado en DocSeal (sin anclaje en blockchain)",
   },
   en: {
     appSubtitle: "Cryptographic Document Authenticator",
@@ -284,5 +288,9 @@ export const T = {
     profileCompany: "Company",
     profileContact: "Contact name",
     profileRole: "Role title",
+    proofTitle: "Independent proof",
+    proofTxLink: "View proof on blockchain →",
+    proofNote: "This record is public and immutable. It can be verified without relying on DocSeal.",
+    notAnchoredHonest: "Registered in DocSeal (no blockchain anchor)",
   },
 };

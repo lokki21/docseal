@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useLang } from "../i18n/useLang.jsx";
 import { hashFile } from "../lib/crypto.js";
 import { supabaseQuery, rpc } from "../lib/supabase.js";
-import { checkOnChain } from "../lib/onchain.js";
+import { checkOnChain, txUrl } from "../lib/onchain.js";
 import { generateCertificatePdf } from "../lib/certificate.js";
 import { fmtCertDate, formatDate } from "../lib/format.js";
 import Dropzone from "../components/Dropzone.jsx";
@@ -55,7 +55,8 @@ export default function VerifyDocument() {
     fechaVerificacion: fmtCertDate(new Date().toISOString(), lang),
     emisorNombre: "", emisorCargo: "", emisorCompania: doc.profiles?.company_name || "",
     fechaRegistro: fmtCertDate(doc.registered_at, lang),
-    txHash: doc.anchor_tx || null, red: "Base",
+    txHash: doc.anchor_tx || null,
+    txExplorerUrl: doc.anchor_tx ? txUrl(doc.anchor_tx) : null, red: "Base",
     explorerUrl: chain?.contractUrl || null,
     publicUrl: `${window.location.origin}/verify/${doc.public_id}`,
   });
@@ -73,8 +74,21 @@ export default function VerifyDocument() {
       <div className="kv"><span>{t.fileLabel}</span><b>{doc.file_name}</b></div>
       <div className="kv"><span>{t.issuedBy}</span><b>{doc.profiles?.company_name || "—"}</b></div>
       {count !== null && <div className="kv"><span>{t.verifCountLabel}</span><b>{count}</b></div>}
-      <div className="hashbox">{doc.hash}</div>
-      {chain?.exists && <p className="hint"><a href={chain.contractUrl} target="_blank" rel="noopener noreferrer">{t.onchainYes} — {t.onchainView}</a></p>}
+
+      {/* Independent proof: verifiable without trusting DocSeal */}
+      <div style={{ marginTop: 16, marginBottom: 16 }}>
+        <p className="hint" style={{ textAlign: "left", margin: "0 0 4px", fontWeight: 600 }}>{t.proofTitle}</p>
+        <div className="hashbox">SHA-256: {doc.hash}</div>
+        {doc.anchor_tx ? (
+          <p style={{ margin: "6px 0", fontSize: 13, textAlign: "center" }}>
+            <a href={txUrl(doc.anchor_tx)} target="_blank" rel="noopener noreferrer">{t.proofTxLink}</a>
+            {chain?.exists && <span style={{ color: "var(--ok)", marginLeft: 8 }}>{t.onchainYes}</span>}
+          </p>
+        ) : (
+          <p className="hint" style={{ margin: "6px 0" }}>{t.notAnchoredHonest}</p>
+        )}
+        <p className="hint" style={{ margin: 0 }}>{t.proofNote}</p>
+      </div>
 
       {busy && <Busy msg={t.checking} />}
       {match !== true && !busy && (<>

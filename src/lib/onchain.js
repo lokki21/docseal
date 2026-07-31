@@ -2,6 +2,13 @@
 // la verificación on-chain es pública (solo lectura).
 import { accessToken } from "./supabase.js";
 
+// Debe coincidir con CHAIN_ID del servidor: sepolia (testnet) hoy; cambiar a
+// https://basescan.org al pasar a mainnet.
+export const EXPLORER_BASE = "https://sepolia.basescan.org";
+export function txUrl(txHash) {
+  return `${EXPLORER_BASE}/tx/${txHash}`;
+}
+
 export async function anchorOnChain(hash) {
   const res = await fetch("/.netlify/functions/register-onchain", {
     method: "POST",
