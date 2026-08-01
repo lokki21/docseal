@@ -23,7 +23,14 @@ async function authRequest(path, body) {
 
 export async function signUp(email, password) {
   const data = await authRequest("signup", { email, password });
-  if (data.access_token) saveSession(data);
+  if (!data.access_token) {
+    // Sin sesión no podemos crear el perfil (RLS lo bloquearía). Ocurre cuando
+    // "Confirm email" está activado en Supabase — debe estar desactivado.
+    throw new Error(
+      "El registro no devolvió una sesión. Desactive 'Confirm email' en Supabase (Authentication → Providers → Email)."
+    );
+  }
+  saveSession(data);
   return data;
 }
 export async function signIn(email, password) {
