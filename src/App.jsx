@@ -12,6 +12,27 @@ function RequireAuth({ children }) {
   return getSession() ? children : <Navigate to="/login" replace />;
 }
 
+/* The two lanes of the product, visible on every screen: the surety registers
+   the policy it issues, the public entity verifies the copy it receives. */
+function LaneBar() {
+  const { t } = useLang();
+  const { pathname } = useLocation();
+  const issuerLane = ["/login", "/dashboard", "/register"].some((p) => pathname.startsWith(p));
+  const entityLane = pathname.startsWith("/verify");
+  return (
+    <nav className="lanebar" aria-label={t.laneNavLabel}>
+      <Link className={"lane-tab" + (issuerLane ? " active" : "")} to="/dashboard">
+        <span className="who">{t.laneIssuerShort}</span>
+        <span className="does">{t.laneIssuerAction}</span>
+      </Link>
+      <Link className={"lane-tab" + (entityLane ? " active" : "")} to="/verify">
+        <span className="who">{t.laneEntityShort}</span>
+        <span className="does">{t.laneEntityAction}</span>
+      </Link>
+    </nav>
+  );
+}
+
 function Frame({ children }) {
   const { t, lang, toggle } = useLang();
   const loggedIn = !!getSession();
@@ -36,6 +57,7 @@ function Frame({ children }) {
             </button>
           </div>
         </header>
+        {pathname !== "/" && <LaneBar />}
         {children}
         <footer className="site-footer">{t.footerText}</footer>
       </div>
