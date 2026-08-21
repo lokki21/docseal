@@ -68,6 +68,15 @@ a { color: var(--navy); }
 .lane-card .act { font-family: var(--serif); font-size: 16px; color: var(--navy); margin: 5px 0 7px; }
 .lane-card p { font-size: 12.5px; color: var(--muted); line-height: 1.55; margin: 0 0 10px; }
 .lane-card .cta { font-size: 12px; font-weight: 700; color: var(--navy); }
+.lane-card .lane-primary { display: block; text-decoration: none; }
+.lane-card .lane-primary:hover .act { text-decoration: underline; }
+.lane-card .lane-note { font-size: 11px; color: var(--faint); margin: 0 0 8px; }
+a.cta { display: inline-block; text-decoration: none; }
+a.cta:hover { text-decoration: underline; }
+
+.get-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.get-list li { position: relative; padding: 7px 0 7px 24px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.get-list li::before { content: "\2713"; position: absolute; left: 0; top: 7px; color: var(--gold); font-weight: 700; }
 
 .eyebrow-line { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
 .flow-wrap { overflow-x: auto; margin: 4px -12px 0; }

@@ -1,6 +1,6 @@
 export const T = {
   es: {
-    appSubtitle: "Autenticador criptográfico de documentos",
+    appSubtitle: "Autenticador criptográfico de pólizas de cumplimiento",
     cloudConnected: "Conectado a la base de datos",
 
     // Welcome screen
@@ -110,22 +110,47 @@ export const T = {
     downloadCertVer: "Descargar certificado (PDF)",
 
     // New pages (re-engineering)
-    homeEyebrow: "Contratación estatal · Pólizas de cumplimiento",
-    homeTagline: "Autenticidad verificable de la póliza, dentro del proceso de contratación",
-    homeLead: "DocSeal se integra en el proceso de adjudicación. La aseguradora registra la huella criptográfica de la póliza que emite; la entidad estatal comprueba, en segundos, que el PDF entregado por el contratista es exactamente ese documento.",
-    homeVerifyCta: "Verificar un documento",
+    homeHeadline: "La póliza que se emitió es la póliza que se entrega.",
+    homeLead: "DocSeal registra una huella criptográfica de cada póliza. Cualquiera con el documento puede comprobar, en segundos, que no ha sido alterado.",
     homeIssuerCta: "Acceso para aseguradoras",
+
+    // Home CTA cards
+    homeCard1Title: "¿Es usted aseguradora?",
+    homeCard1Body: "Haga clic para registrar una póliza.",
+    homeCard1Link: "Cómo funciona para aseguradoras →",
+    homeCard2Title: "¿Es usted entidad estatal?",
+    homeCard2Body: "Haga clic para verificar una póliza.",
+    homeCard2Note: "Sin cuenta, sin costo.",
+    homeCard2Link: "Cómo funciona para entidades →",
+
+    // Audience page — aseguradoras
+    asegHeading: "Ninguna copia falsificada o alterada de su póliza puede pasar por auténtica.",
+    asegBody: "Usted conserva la prueba, pública e inmutable, de exactamente qué documento emitió: montos, coberturas, vigencias. Si alguien presenta una versión modificada, la diferencia se demuestra en segundos.",
+    asegGetTitle: "Qué obtiene",
+    asegGet1: "Un enlace público y un código QR en cada póliza que emite.",
+    asegGet2: "Un registro inmutable, anclado en blockchain, de la huella del documento.",
+    asegGet3: "Cuántas veces se ha comprobado cada póliza, y cuándo.",
+    asegGet4: "Los archivos nunca salen de su navegador: se registra la huella, nunca el documento.",
+
+    // Audience page — entidades
+    entHeading: "Prueba matemática de que la póliza de su expediente es la que emitió la aseguradora.",
+    entBody: "Comprobación en segundos, sin cuenta y sin costo. El resultado es verificable de forma independiente en la blockchain, sin tener que confiar en DocSeal.",
+    entCheckTitle: "Cómo comprobar",
+    entCheck1: "Escanee el código QR de la póliza, o abra el enlace que la acompaña.",
+    entCheck2: "O suba el PDF que recibió del contratista.",
+    entCheck3: "El sistema compara la huella. Si coincide, el documento es idéntico al que registró la aseguradora.",
+    entFileTitle: "Constancia para el expediente",
+    entFileBody: "Cada comprobación queda registrada con fecha. El funcionario que verifica deja constancia de que lo hizo — evidencia de debida diligencia para el expediente contractual y para auditorías posteriores.",
+    entVerifyCta: "Verificar una póliza",
 
     // Las dos vías del producto
     laneNavLabel: "Roles del proceso",
     laneIssuerShort: "Aseguradora",
     laneIssuerRole: "Aseguradora o banco · Garante",
     laneIssuerAction: "Registrar la póliza",
-    laneIssuerDesc: "Al emitir la póliza, registre su huella SHA-256 y ánclela en blockchain. Obtiene un enlace público y un código QR de verificación.",
     laneEntityShort: "Entidad estatal",
     laneEntityRole: "Entidad estatal · Beneficiario",
     laneEntityAction: "Verificar la póliza",
-    laneEntityDesc: "Suba el PDF recibido del contratista. Si la huella coincide con la registrada por la aseguradora, el documento es auténtico. Sin cuenta ni registro.",
 
     // El flujo (estructura de la garantía)
     flowTitle: "El flujo que modelamos",
@@ -187,7 +212,7 @@ export const T = {
     notAnchoredHonest: "Registrado en DocSeal (sin anclaje en blockchain)",
   },
   en: {
-    appSubtitle: "Cryptographic Document Authenticator",
+    appSubtitle: "Cryptographic authenticator for performance bonds",
     cloudConnected: "Connected to cloud database",
 
     welcomeTitle: "What is DocSeal?",
@@ -289,22 +314,47 @@ export const T = {
     downloadCertVer: "Download certificate (PDF)",
 
     // New pages (re-engineering)
-    homeEyebrow: "Public contracting · Performance bonds",
-    homeTagline: "Verifiable policy authenticity, inside the contracting process",
-    homeLead: "DocSeal sits inside the contract award process. The insurer registers the cryptographic fingerprint of the policy it issues; the public entity checks, in seconds, that the PDF handed over by the contractor is exactly that document.",
-    homeVerifyCta: "Verify a document",
+    homeHeadline: "The policy that was issued is the policy that is delivered.",
+    homeLead: "DocSeal registers a cryptographic fingerprint of every policy. Anyone holding the document can check, in seconds, that it has not been altered.",
     homeIssuerCta: "Insurer access",
+
+    // Home CTA cards
+    homeCard1Title: "Are you an insurer?",
+    homeCard1Body: "Click to register a policy.",
+    homeCard1Link: "How it works for insurers →",
+    homeCard2Title: "Are you a public entity?",
+    homeCard2Body: "Click to verify a policy.",
+    homeCard2Note: "No account, no cost.",
+    homeCard2Link: "How it works for public entities →",
+
+    // Audience page — aseguradoras
+    asegHeading: "No forged or altered copy of your policy can pass as genuine.",
+    asegBody: "You keep public, immutable proof of exactly which document you issued — amounts, coverage, validity dates. If someone presents a modified version, the difference is demonstrable in seconds.",
+    asegGetTitle: "What you get",
+    asegGet1: "A public link and a QR code on every policy you issue.",
+    asegGet2: "An immutable, blockchain-anchored record of the document's fingerprint.",
+    asegGet3: "How many times each policy has been checked, and when.",
+    asegGet4: "Files never leave your browser: the fingerprint is registered, never the document.",
+
+    // Audience page — entidades
+    entHeading: "Mathematical proof that the policy in your file is the one the insurer issued.",
+    entBody: "Checked in seconds, no account, no cost. The result is independently verifiable on the blockchain — without having to trust DocSeal.",
+    entCheckTitle: "How to check",
+    entCheck1: "Scan the QR code on the policy, or open the link that comes with it.",
+    entCheck2: "Or upload the PDF you received from the contractor.",
+    entCheck3: "The system compares the fingerprint. If it matches, the document is identical to the one the insurer registered.",
+    entFileTitle: "Evidence for the file",
+    entFileBody: "Every check is logged with a date. The official who verifies leaves evidence that they did — due-diligence evidence for the contracting file and for later audit.",
+    entVerifyCta: "Verify a policy",
 
     // The two lanes of the product
     laneNavLabel: "Process roles",
     laneIssuerShort: "Insurer",
     laneIssuerRole: "Insurer or bank · Surety",
     laneIssuerAction: "Register the policy",
-    laneIssuerDesc: "When you issue the policy, register its SHA-256 fingerprint and anchor it on-chain. You get a public verification link and a QR code.",
     laneEntityShort: "Public entity",
     laneEntityRole: "Public entity · Beneficiary",
     laneEntityAction: "Verify the policy",
-    laneEntityDesc: "Upload the PDF received from the contractor. If the fingerprint matches the one registered by the insurer, the document is authentic. No account needed.",
 
     // The flow (surety structure)
     flowTitle: "The flow we model",

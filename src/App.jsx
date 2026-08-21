@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Register from "./pages/Register.jsx";
 import Verify from "./pages/Verify.jsx";
 import VerifyDocument from "./pages/VerifyDocument.jsx";
+import Aseguradoras from "./pages/Aseguradoras.jsx";
+import Entidades from "./pages/Entidades.jsx";
 
 function RequireAuth({ children }) {
   return getSession() ? children : <Navigate to="/login" replace />;
@@ -71,6 +73,8 @@ export default function App() {
       <Frame>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/aseguradoras" element={<Aseguradoras />} />
+          <Route path="/entidades" element={<Entidades />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
           <Route path="/register" element={<RequireAuth><Register /></RequireAuth>} />

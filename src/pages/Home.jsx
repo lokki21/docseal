@@ -66,26 +66,28 @@ export default function Home() {
   return (
     <>
       <div className="card">
-        <div className="eyebrow-line">{t.homeEyebrow}</div>
-        <h2 style={{ marginTop: 0, marginBottom: 8 }}>{t.homeTagline}</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 8 }}>{t.homeHeadline}</h2>
         <p style={{ color: "var(--muted)", fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
           {t.homeLead}
         </p>
       </div>
 
       <div className="lanes">
-        <Link className="lane-card" to="/dashboard">
-          <div className="role">{t.laneIssuerRole}</div>
-          <div className="act">{t.laneIssuerAction}</div>
-          <p>{t.laneIssuerDesc}</p>
-          <span className="cta">{t.homeIssuerCta} →</span>
-        </Link>
-        <Link className="lane-card gold" to="/verify">
-          <div className="role">{t.laneEntityRole}</div>
-          <div className="act">{t.laneEntityAction}</div>
-          <p>{t.laneEntityDesc}</p>
-          <span className="cta">{t.homeVerifyCta} →</span>
-        </Link>
+        <div className="lane-card">
+          <Link className="lane-primary" to="/dashboard">
+            <div className="act">{t.homeCard1Title}</div>
+            <p>{t.homeCard1Body}</p>
+          </Link>
+          <Link className="cta" to="/aseguradoras">{t.homeCard1Link}</Link>
+        </div>
+        <div className="lane-card gold">
+          <Link className="lane-primary" to="/verify">
+            <div className="act">{t.homeCard2Title}</div>
+            <p>{t.homeCard2Body}</p>
+          </Link>
+          <div className="lane-note">{t.homeCard2Note}</div>
+          <Link className="cta" to="/entidades">{t.homeCard2Link}</Link>
+        </div>
       </div>
 
       <div className="card">
@@ -94,24 +96,7 @@ export default function Home() {
           {t.flowIntro}
         </p>
         <FlowDiagram t={t} />
-        <ol className="flow-steps">
-          <li>{t.flowStep1}</li>
-          <li>{t.flowStep2}</li>
-          <li className="sealed">{t.flowStep3}<span className="tag">{t.flowTagSeal}</span></li>
-          <li className="sealed">{t.flowStep4}<span className="tag">{t.flowTagSeal}</span></li>
-        </ol>
         <p className="hint" style={{ textAlign: "left", marginTop: 12 }}>{t.flowSealLegend}</p>
-      </div>
-
-      <div className="card">
-        <h3 style={{ marginTop: 0 }}>{t.fitTitle}</h3>
-        <p style={{ color: "var(--muted)", fontSize: 13, lineHeight: 1.6, marginTop: 0 }}>
-          {t.fitBody}
-        </p>
-        <div className="banner info" style={{ textAlign: "left", marginBottom: 0 }}>
-          <div className="eyebrow">{t.fitLimitTitle}</div>
-          <div className="detail">{t.fitLimitBody}</div>
-        </div>
       </div>
 
       <p className="hint">{t.welcomeNote}</p>
