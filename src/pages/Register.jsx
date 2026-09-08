@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n/useLang.jsx";
-import { hashBytes } from "../lib/crypto.js";
 import { imageToPdf } from "../lib/imageToPdf.js";
-import { supabaseQuery, currentUserId } from "../lib/supabase.js";
+import { registerDocument } from "../lib/registry.js";
 import { anchorOnChain, txUrl } from "../lib/onchain.js";
 import { generateCertificatePdf } from "../lib/certificate.js";
 import { fmtCertDate, downloadBlob } from "../lib/format.js";
@@ -24,15 +23,10 @@ export default function Register() {
   const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}` : "";
 
   const registerBytes = async (bytes, fileName, size, blob) => {
-    const hash = await hashBytes(bytes);
-    const existing = await supabaseQuery("documents", { filters: `hash=eq.${hash}&select=*` });
-    if (existing.length > 0) { setRec(existing[0]); setAlready(true); return; }
-    setBusy(t.registering);
-    const inserted = await supabaseQuery("documents", { method: "POST", auth: true, body: {
-      hash, file_name: fileName, file_size: size, issuer_id: currentUserId(),
-    }});
-    setRec(inserted[0]);
-    setPdfBlob(blob || null);
+    const { record, already } = await registerDocument(bytes, fileName, size);
+    setRec(record);
+    setAlready(already);
+    if (!already) setPdfBlob(blob || null);
   };
 
   const onPdf = async (file) => {
