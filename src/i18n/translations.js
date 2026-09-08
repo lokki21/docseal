@@ -59,7 +59,6 @@ export const T = {
     // Processing
     computingHash: "Calculando huella SHA-256...",
     buildingPdf: "Generando PDF desde imagen...",
-    registering: "Registrando en la base de datos...",
     checking: "Comprobando en el registro...",
     working: "Procesando...",
 
@@ -266,7 +265,6 @@ export const T = {
 
     computingHash: "Computing SHA-256 fingerprint...",
     buildingPdf: "Generating PDF from image...",
-    registering: "Registering to database...",
     checking: "Checking against registry...",
     working: "Working...",
 
