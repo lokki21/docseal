@@ -31,6 +31,7 @@ export default function Dashboard() {
       <div className="card">
         <h2 style={{ marginTop: 0 }}>{t.dashboardTitle}</h2>
         <Link className="btn" to="/register">{t.registerNew}</Link>
+        <Link className="btn quiet" to="/demo" style={{ marginTop: 8 }}>{t.demoLinkLabel}</Link>
       </div>
       {err && <div className="error-box">{err}</div>}
       {docs && docs.length === 0 && <p className="hint">{t.noDocsYet}</p>}

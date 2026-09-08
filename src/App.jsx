@@ -5,6 +5,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Register from "./pages/Register.jsx";
+import Demo from "./pages/Demo.jsx";
 import Verify from "./pages/Verify.jsx";
 import VerifyDocument from "./pages/VerifyDocument.jsx";
 import Aseguradoras from "./pages/Aseguradoras.jsx";
@@ -19,7 +20,7 @@ function RequireAuth({ children }) {
 function LaneBar() {
   const { t } = useLang();
   const { pathname } = useLocation();
-  const issuerLane = ["/login", "/dashboard", "/register"].some((p) => pathname.startsWith(p));
+  const issuerLane = ["/login", "/dashboard", "/register", "/demo"].some((p) => pathname.startsWith(p));
   const entityLane = pathname.startsWith("/verify");
   return (
     <nav className="lanebar" aria-label={t.laneNavLabel}>
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
           <Route path="/register" element={<RequireAuth><Register /></RequireAuth>} />
+          <Route path="/demo" element={<RequireAuth><Demo /></RequireAuth>} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/verify/:publicId" element={<VerifyDocument />} />
           <Route path="*" element={<Navigate to="/" replace />} />
