@@ -1,6 +1,6 @@
 # DocSeal Manual E2E Checklist
 
-Run on the Netlify deploy preview of the `reengineering` branch.
+Run on the Netlify deploy preview of the working branch (currently `feat/demo-mode`).
 Prerequisites: schema migration applied in Supabase (SQL Editor), Netlify env vars set
 (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`), email auth enabled with confirm-email off.
 
