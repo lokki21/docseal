@@ -3,3 +3,7 @@ dist
 .env
 .env.local
 .superpowers/
+.DS_Store
+_to_delete/
+# Policy documents — must never be committed
+templates polizas/
