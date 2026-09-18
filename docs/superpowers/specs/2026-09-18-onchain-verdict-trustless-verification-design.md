@@ -167,4 +167,3 @@ audit row is skipped.
   deliberate acceptance; batching (Briefing §7) is the volume mitigation, out of scope here.
 - **A document anchored per the DB but `exists === false` on-chain** (data inconsistency) resolves to
   `UNVERIFIABLE`, never green — fail closed.
-```
