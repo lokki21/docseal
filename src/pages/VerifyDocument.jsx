@@ -3,9 +3,11 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useLang } from "../i18n/useLang.jsx";
 import { hashFile } from "../lib/crypto.js";
 import { supabaseQuery, rpc } from "../lib/supabase.js";
-import { checkOnChain, txUrl } from "../lib/onchain.js";
+import { txUrl } from "../lib/onchain.js";
+import { resolveVerdict } from "../lib/registry.js";
+import { VERDICT } from "../lib/verdict.js";
 import { generateCertificatePdf } from "../lib/certificate.js";
-import { fmtCertDate, formatDate } from "../lib/format.js";
+import { fmtCertDate } from "../lib/format.js";
 import Dropzone from "../components/Dropzone.jsx";
 import Verdict from "../components/Verdict.jsx";
 import Busy from "../components/Busy.jsx";
@@ -14,47 +16,66 @@ export default function VerifyDocument() {
   const { t, lang } = useLang();
   const { publicId } = useParams();
   const [params] = useSearchParams();
+  const hashFromUrl = params.get("h");
   const [doc, setDoc] = useState(undefined); // undefined=loading, null=not found
   const [count, setCount] = useState(null);
-  const [match, setMatch] = useState(params.get("match") === "1" ? true : null);
   const [busy, setBusy] = useState(false);
   const [chain, setChain] = useState(null);
+  const [verdict, setVerdict] = useState(null);
+  const [checking, setChecking] = useState(false);
+  const [dbDown, setDbDown] = useState(false);
   const [vName, setVName] = useState("");
   const [vRole, setVRole] = useState("");
   const [vEntity, setVEntity] = useState("");
 
+  const runVerdict = async (authorityHash, uploadedHash) => {
+    setChecking(true);
+    const res = await resolveVerdict(authorityHash, uploadedHash ? { uploadedHash } : {});
+    setVerdict(res.verdict); setChain(res.chain); setChecking(false);
+    return res.verdict;
+  };
+
   useEffect(() => {
     (async () => {
+      let row = null;
       try {
         const rows = await supabaseQuery("documents",
           { filters: `public_id=eq.${publicId}&select=*,profiles(company_name)` });
-        setDoc(rows[0] || null);
-        if (rows[0]) {
-          rpc("verification_count", { doc_id: rows[0].id }).then(setCount).catch(() => {});
-          checkOnChain(rows[0].hash).then(setChain).catch(() => {});
-        }
-      } catch { setDoc(null); }
+        row = rows[0] || null;
+        setDoc(row);                       // null here means "not found" (DB reachable)
+      } catch {
+        setDbDown(true); setDoc(null);     // DB unreachable — degrade
+      }
+      if (row) rpc("verification_count", { doc_id: row.id }).then(setCount).catch(() => {});
+      const authority = hashFromUrl || row?.hash;
+      if (authority) await runVerdict(authority);
     })();
   }, [publicId]);
 
   const onFile = async (file) => {
+    const authority = hashFromUrl || doc?.hash;
+    if (!authority) return;
     setBusy(true);
-    const ok = (await hashFile(file)) === doc.hash;
-    setMatch(ok);
+    const uploaded = await hashFile(file);
+    const v = await runVerdict(authority, uploaded);
     await supabaseQuery("verifications", { method: "POST", body: {
-      checked_hash: doc.hash, result: ok ? "authentic" : "not_found",
-      document_id: ok ? doc.id : null,
+      checked_hash: authority,
+      result: v === VERDICT.AUTHENTIC ? "authentic" : v === VERDICT.ALTERED ? "altered" : v === VERDICT.NOT_FOUND ? "not_found" : "unverifiable",
+      document_id: v === VERDICT.AUTHENTIC && doc ? doc.id : null,
+      decided_by: "onchain", chain_exists: v === VERDICT.AUTHENTIC,
+      anchor_tx: doc?.anchor_tx || null,
       verifier_name: vName.trim() || null, verifier_role: vRole.trim() || null, verifier_entity: vEntity.trim() || null,
     }}).catch(() => {});
     setBusy(false);
   };
 
   const downloadCert = () => generateCertificatePdf({
-    kind: "verificacion", lang, autentico: true, archivo: doc.file_name, hash: doc.hash,
+    kind: "verificacion", lang, autentico: verdict === VERDICT.AUTHENTIC,
+    archivo: doc.file_name, hash: hashFromUrl || doc.hash,
     verificadorNombre: vName.trim(), verificadorCargo: vRole.trim(), verificadorEntidad: vEntity.trim(),
     fechaVerificacion: fmtCertDate(new Date().toISOString(), lang),
     emisorNombre: "", emisorCargo: "", emisorCompania: doc.profiles?.company_name || "",
-    fechaRegistro: fmtCertDate(doc.registered_at, lang),
+    fechaRegistro: doc.registered_at ? fmtCertDate(doc.registered_at, lang) : "",
     txHash: doc.anchor_tx || null,
     txExplorerUrl: doc.anchor_tx ? txUrl(doc.anchor_tx) : null, red: "Base",
     explorerUrl: chain?.contractUrl || null,
@@ -62,14 +83,53 @@ export default function VerifyDocument() {
   });
 
   if (doc === undefined) return <Busy msg={t.working} />;
+
+  // Verdict-driven banners, shared across the normal and DB-degraded renders.
+  const authorityHash = hashFromUrl || doc?.hash;
+  const verdictBanners = (<>
+    {checking && <Verdict kind="info" title={t.vCheckingChain} />}
+    {!checking && verdict === VERDICT.AUTHENTIC && <Verdict kind="ok" title={doc ? t.matchOk : t.vAuthNoRegistry} />}
+    {!checking && verdict === VERDICT.NOT_ANCHORED && <Verdict kind="warn" title={t.vNotAnchored} detail={t.vNotAnchoredHint} />}
+    {!checking && verdict === VERDICT.UNVERIFIABLE && (<>
+      <Verdict kind="warn" title={t.vUnverifiable} detail={t.vUnverifiableHint} />
+      <button className="btn quiet" onClick={() => runVerdict(authorityHash)}>{t.vRetry}</button>
+    </>)}
+    {!checking && verdict === VERDICT.CHAIN_CONFIG_ERROR && <Verdict kind="bad" title={t.vConfigError} detail={t.vConfigErrorHint} />}
+    {!checking && verdict === VERDICT.ALTERED && <Verdict kind="bad" title={t.matchFail} detail={t.notFoundHint} />}
+    {!checking && verdict === VERDICT.NOT_FOUND && <Verdict kind="bad" title={t.recordNotFound} detail={t.recordNotFoundHint} />}
+    {dbDown && <Verdict kind="warn" title={t.vRegistryUnavailable} />}
+  </>);
+
+  // DB unreachable but the QR carried a hash: still show the chain verdict + proof.
+  if (doc === null && dbDown && authorityHash) {
+    return (
+      <div className="card">
+        {verdictBanners}
+        {/* Independent proof: verifiable without trusting DocSeal or its registry */}
+        <div style={{ marginTop: 16, marginBottom: 16 }}>
+          <p className="hint" style={{ textAlign: "left", margin: "0 0 4px", fontWeight: 600 }}>{t.proofTitle}</p>
+          <div className="hashbox">SHA-256: {authorityHash}</div>
+          <p className="hint" style={{ margin: 0 }}>{t.proofNote}</p>
+        </div>
+        {busy && <Busy msg={t.checking} />}
+        {!busy && (<>
+          <Dropzone label={t.uploadYourCopy} sub={t.verifySubtext} onFile={onFile} />
+          <div style={{ marginTop: 14 }}>
+            <p className="hint" style={{ textAlign: "left" }}><b>{t.optIdTitle}</b><br />{t.optIdHint}</p>
+            <div className="field"><input placeholder={t.nameLabel} value={vName} onChange={(e) => setVName(e.target.value)} /></div>
+            <div className="field"><input placeholder={t.roleLabel} value={vRole} onChange={(e) => setVRole(e.target.value)} /></div>
+            <div className="field"><input placeholder={t.companyLabel} value={vEntity} onChange={(e) => setVEntity(e.target.value)} /></div>
+          </div>
+        </>)}
+      </div>
+    );
+  }
+
   if (doc === null) return <div className="card"><Verdict kind="bad" title={t.recordNotFound} detail={t.recordNotFoundHint} /></div>;
 
   return (
     <div className="card">
-      {match === null && <Verdict kind="info" title={t.registeredOk.replace("!", "").replace("¡", "")}
-        detail={`${t.registeredOn} ${formatDate(doc.registered_at, lang)}${doc.anchor_status === "anchored" ? " · ⛓ Base" : ""}`} />}
-      {match === true && <Verdict kind="ok" title={t.matchOk} />}
-      {match === false && <Verdict kind="bad" title={t.matchFail} detail={t.notFoundHint} />}
+      {verdictBanners}
 
       <div className="kv"><span>{t.fileLabel}</span><b>{doc.file_name}</b></div>
       <div className="kv"><span>{t.issuedBy}</span><b>{doc.profiles?.company_name || "—"}</b></div>
@@ -91,7 +151,7 @@ export default function VerifyDocument() {
       </div>
 
       {busy && <Busy msg={t.checking} />}
-      {match !== true && !busy && (<>
+      {verdict !== VERDICT.AUTHENTIC && !busy && (<>
         <Dropzone label={t.uploadYourCopy} sub={t.verifySubtext} onFile={onFile} />
         <div style={{ marginTop: 14 }}>
           <p className="hint" style={{ textAlign: "left" }}><b>{t.optIdTitle}</b><br />{t.optIdHint}</p>
@@ -100,7 +160,7 @@ export default function VerifyDocument() {
           <div className="field"><input placeholder={t.companyLabel} value={vEntity} onChange={(e) => setVEntity(e.target.value)} /></div>
         </div>
       </>)}
-      {match === true && <button className="btn gold" onClick={downloadCert}>{t.downloadCertVer}</button>}
+      {verdict === VERDICT.AUTHENTIC && doc && <button className="btn gold" onClick={downloadCert}>{t.downloadCertVer}</button>}
     </div>
   );
 }
