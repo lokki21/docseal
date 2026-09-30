@@ -69,7 +69,9 @@ export default function Demo() {
     try {
       const file = await fetchDemoFile(TAMPERED.file);
       const hash = await hashBytes(await file.arrayBuffer());
-      const { verdict, doc } = await resolveVerdict(hash);
+      // Compare the tampered copy against the registered document's authoritative
+      // hash so the mismatch yields ALTERED (not merely NOT_FOUND).
+      const { verdict, doc } = await resolveVerdict(rec.hash, { uploadedHash: hash });
       setFail({ match: verdict === VERDICT.AUTHENTIC, publicId: doc?.public_id, hash });
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");

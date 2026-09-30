@@ -69,7 +69,7 @@ export default function VerifyDocument() {
     setBusy(false);
   };
 
-  const downloadCert = () => generateCertificatePdf({
+  const downloadCert = () => doc && generateCertificatePdf({
     kind: "verificacion", lang, autentico: verdict === VERDICT.AUTHENTIC,
     archivo: doc.file_name, hash: hashFromUrl || doc.hash,
     verificadorNombre: vName.trim(), verificadorCargo: vRole.trim(), verificadorEntidad: vEntity.trim(),
