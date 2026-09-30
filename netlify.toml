@@ -4,6 +4,9 @@
 
 [functions]
   directory = "netlify/functions"
+  # esbuild bundles both CommonJS and ESM functions; pinned so verify-onchain.js
+  # (ESM) works regardless of the platform default bundler.
+  node_bundler = "esbuild"
 
 [[redirects]]
   from = "/*"

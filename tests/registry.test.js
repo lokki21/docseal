@@ -1,4 +1,5 @@
 import { it, expect, vi, beforeEach } from "vitest";
+import { VERDICT } from "../src/lib/verdict.js";
 
 const q = vi.fn();
 vi.mock("../src/lib/supabase.js", () => ({
@@ -6,9 +7,12 @@ vi.mock("../src/lib/supabase.js", () => ({
   currentUserId: () => "issuer-123",
 }));
 
-const { registerDocument, verifyHash } = await import("../src/lib/registry.js");
+const check = vi.fn();
+vi.mock("../src/lib/onchain.js", () => ({ checkOnChain: (...a) => check(...a) }));
 
-beforeEach(() => q.mockReset());
+const { registerDocument, resolveVerdict } = await import("../src/lib/registry.js");
+
+beforeEach(() => { q.mockReset(); check.mockReset(); });
 
 it("registerDocument returns already:true when hash exists and does not insert", async () => {
   q.mockResolvedValueOnce([{ id: 1, hash: "x", public_id: "abc" }]); // findByHash
@@ -30,23 +34,28 @@ it("registerDocument inserts and returns already:false when new", async () => {
   expect(insert[1].method).toBe("POST");
   expect(insert[1].auth).toBe(true);
   expect(insert[1].body.issuer_id).toBe("issuer-123");
-  expect(insert[1].body).toMatchObject({ file_name: "b.pdf", file_size: 1 });
+  expect(insert[1].body).toMatchObject({ file_name: "b.pdf", file_size: 1, anchor_status: "pending" });
 });
 
-it("verifyHash returns match with publicId when found", async () => {
-  q.mockResolvedValueOnce([{ public_id: "pub9" }]);
-  const r = await verifyHash("deadbeef");
-  expect(r).toEqual({ match: true, publicId: "pub9" });
-  expect(q).toHaveBeenCalledTimes(1);
+it("resolveVerdict is AUTHENTIC from the chain even when the DB throws", async () => {
+  check.mockResolvedValueOnce({ ok: true, exists: true });
+  q.mockRejectedValueOnce(new Error("db down")); // findByHash enrichment fails
+  const r = await resolveVerdict("deadbeef");
+  expect(r.verdict).toBe(VERDICT.AUTHENTIC);
+  expect(r.doc).toBe(null);
 });
 
-it("verifyHash logs not_found and returns match:false when absent", async () => {
-  q.mockResolvedValueOnce([]);  // lookup
-  q.mockResolvedValueOnce([]);  // verifications insert
-  const r = await verifyHash("beef");
-  expect(r.match).toBe(false);
-  expect(r.publicId).toBe(null);
-  expect(q).toHaveBeenCalledTimes(2);
-  expect(q.mock.calls[1][0]).toBe("verifications");
-  expect(q.mock.calls[1][1].body.result).toBe("not_found");
+it("resolveVerdict is NOT_ANCHORED when chain says no but the index knows it", async () => {
+  check.mockResolvedValueOnce({ ok: true, exists: false });
+  q.mockResolvedValueOnce([{ public_id: "p1", hash: "deadbeef" }]); // findByHash
+  const r = await resolveVerdict("deadbeef");
+  expect(r.verdict).toBe(VERDICT.NOT_ANCHORED);
+  expect(r.doc.public_id).toBe("p1");
+});
+
+it("resolveVerdict passes uploadedHash through for ALTERED", async () => {
+  check.mockResolvedValueOnce({ ok: true, exists: true });
+  q.mockResolvedValueOnce([{ public_id: "p1", hash: "deadbeef" }]);
+  const r = await resolveVerdict("deadbeef", { uploadedHash: "0000" });
+  expect(r.verdict).toBe(VERDICT.ALTERED);
 });

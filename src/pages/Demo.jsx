@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import QRCode from "qrcode";
 import { useLang } from "../i18n/useLang.jsx";
 import { hashBytes } from "../lib/crypto.js";
-import { registerDocument, verifyHash } from "../lib/registry.js";
+import { registerDocument, resolveVerdict } from "../lib/registry.js";
+import { VERDICT } from "../lib/verdict.js";
 import { anchorOnChain } from "../lib/onchain.js";
 import { DEMO_POLICIES, TAMPERED, fetchDemoFile } from "../lib/demoData.js";
 import Verdict from "../components/Verdict.jsx";
@@ -21,7 +22,7 @@ export default function Demo() {
   const [busy, setBusy] = useState("");
   const [err, setErr] = useState("");
 
-  const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}` : "";
+  const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}?h=${rec.hash}` : "";
 
   useEffect(() => {
     if (!publicUrl) { setQr(""); return; }
@@ -42,13 +43,14 @@ export default function Demo() {
       const file = await fetchDemoFile(sel.file);
       const { record, already } = await registerDocument(await file.arrayBuffer(), file.name, file.size);
       setRec(record); setAlready(already);
+      if (!already) doAnchor(record);
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");
   };
 
-  const doAnchor = async () => {
+  const doAnchor = async (doc = rec) => {
     setAnchor("busy");
-    try { setAnchor(await anchorOnChain(rec.hash)); }
+    try { setAnchor(await anchorOnChain(doc.hash)); }
     catch { setAnchor({ error: true }); }
   };
 
@@ -56,7 +58,8 @@ export default function Demo() {
     setErr(""); setBusy(t.demoBusyVerify);
     try {
       const file = await fetchDemoFile(sel.file);
-      setPass(await verifyHash(await hashBytes(await file.arrayBuffer())));
+      const { verdict, doc } = await resolveVerdict(await hashBytes(await file.arrayBuffer()));
+      setPass({ match: verdict === VERDICT.AUTHENTIC, publicId: doc?.public_id });
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");
   };
@@ -66,7 +69,10 @@ export default function Demo() {
     try {
       const file = await fetchDemoFile(TAMPERED.file);
       const hash = await hashBytes(await file.arrayBuffer());
-      setFail({ ...(await verifyHash(hash)), hash });
+      // Compare the tampered copy against the registered document's authoritative
+      // hash so the mismatch yields ALTERED (not merely NOT_FOUND).
+      const { verdict, doc } = await resolveVerdict(rec.hash, { uploadedHash: hash });
+      setFail({ match: verdict === VERDICT.AUTHENTIC, publicId: doc?.public_id, hash });
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");
   };
@@ -104,7 +110,6 @@ export default function Demo() {
               <div className="hashbox" style={{ fontSize: 13 }}>{publicUrl}</div>
             </div>
             {qr && <img src={qr} alt="QR" style={{ display: "block", margin: "8px 0" }} />}
-            {!anchor && <button className="btn" onClick={doAnchor}>{t.demoAnchorBtn}</button>}
             {anchor === "busy" && <Busy msg={t.anchoring} />}
             {anchor?.error && <div className="error-box">{t.anchorError}</div>}
             {anchor?.status && <Verdict kind="ok" title={t.anchoredOk} />}

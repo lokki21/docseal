@@ -2,6 +2,8 @@
 // and by the /demo page, so the demo can never drift from production behavior.
 import { hashBytes } from "./crypto.js";
 import { supabaseQuery, currentUserId } from "./supabase.js";
+import { checkOnChain } from "./onchain.js";
+import { decideVerdict } from "./verdict.js";
 
 export async function findByHash(hash) {
   const rows = await supabaseQuery("documents", { filters: `hash=eq.${hash}&select=*` });
@@ -16,17 +18,28 @@ export async function registerDocument(bytes, fileName, size) {
   if (existing) return { record: existing, already: true };
   const inserted = await supabaseQuery("documents", {
     method: "POST", auth: true,
-    body: { hash, file_name: fileName, file_size: size, issuer_id: currentUserId() },
+    body: { hash, file_name: fileName, file_size: size, issuer_id: currentUserId(), anchor_status: "pending" },
   });
   return { record: inserted[0], already: false };
 }
 
-export async function verifyHash(hash) {
-  const found = await supabaseQuery("documents", { filters: `hash=eq.${hash}&select=public_id` });
-  if (found.length) return { match: true, publicId: found[0].public_id };
-  // Log the miss for the audit trail (best-effort; matches current Verify.jsx).
-  await supabaseQuery("verifications", {
-    method: "POST", body: { checked_hash: hash, result: "not_found", document_id: null },
-  }).catch(() => {});
-  return { match: false, publicId: null };
+// resolves the verdict for `hash`. Chain first (the authority); the DB lookup is
+// best-effort enrichment. `uploadedHash` (a copy being compared) drives ALTERED.
+export async function resolveVerdict(hash, { uploadedHash } = {}) {
+  const chain = await checkOnChain(hash);
+  let doc = null;
+  let index = { available: false, found: false };
+  try {
+    doc = await findByHash(hash);
+    index = { available: true, found: !!doc };
+  } catch {
+    index = { available: false, found: false };
+  }
+  const verdict = decideVerdict({
+    chain,
+    index,
+    uploadedHash: uploadedHash || null,
+    hashMatches: uploadedHash ? uploadedHash === hash : undefined,
+  });
+  return { verdict, chain, doc };
 }

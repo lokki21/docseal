@@ -22,15 +22,20 @@ export async function anchorOnChain(hash) {
   return res.json();
 }
 
+// Read-only, public, DB-independent. Never throws — returns a normalized result
+// so the verdict layer can reason about it. kind is 'config' (our misconfig) or
+// 'network' (unreachable/timeout).
 export async function checkOnChain(hash) {
-  const res = await fetch("/.netlify/functions/verify-onchain", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ hash }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || `Error ${res.status}`);
+  try {
+    const res = await fetch("/.netlify/functions/verify-onchain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hash }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, kind: data.kind === "config" ? "config" : "network", error: data.error || `Error ${res.status}` };
+    return { ok: true, ...data };
+  } catch (e) {
+    return { ok: false, kind: "network", error: e.message };
   }
-  return res.json();
 }
