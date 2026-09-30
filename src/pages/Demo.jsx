@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import QRCode from "qrcode";
 import { useLang } from "../i18n/useLang.jsx";
 import { hashBytes } from "../lib/crypto.js";
-import { registerDocument, verifyHash } from "../lib/registry.js";
+import { registerDocument, resolveVerdict } from "../lib/registry.js";
+import { VERDICT } from "../lib/verdict.js";
 import { anchorOnChain } from "../lib/onchain.js";
 import { DEMO_POLICIES, TAMPERED, fetchDemoFile } from "../lib/demoData.js";
 import Verdict from "../components/Verdict.jsx";
@@ -56,7 +57,8 @@ export default function Demo() {
     setErr(""); setBusy(t.demoBusyVerify);
     try {
       const file = await fetchDemoFile(sel.file);
-      setPass(await verifyHash(await hashBytes(await file.arrayBuffer())));
+      const { verdict, doc } = await resolveVerdict(await hashBytes(await file.arrayBuffer()));
+      setPass({ match: verdict === VERDICT.AUTHENTIC, publicId: doc?.public_id });
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");
   };
@@ -66,7 +68,8 @@ export default function Demo() {
     try {
       const file = await fetchDemoFile(TAMPERED.file);
       const hash = await hashBytes(await file.arrayBuffer());
-      setFail({ ...(await verifyHash(hash)), hash });
+      const { verdict, doc } = await resolveVerdict(hash);
+      setFail({ match: verdict === VERDICT.AUTHENTIC, publicId: doc?.public_id, hash });
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");
   };
