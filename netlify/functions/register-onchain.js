@@ -79,7 +79,7 @@ exports.handler = async (event) => {
 
     const tx = await contract.register(documentHash);
     const receipt = await tx.wait(1);
-    await updateAnchor(cleanHash, { anchor_status: "anchored", anchor_tx: receipt.hash, anchored_at: new Date().toISOString() });
+    await updateAnchor(cleanHash, { anchor_status: "anchored", anchor_tx: receipt.hash, anchored_at: new Date().toISOString(), anchor_block: receipt.blockNumber });
     return {
       statusCode: 200,
       headers: HEADERS,
