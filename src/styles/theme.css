@@ -2,6 +2,7 @@
 :root {
   --navy: #0b1f3a; --navy-soft: #16304f; --gold: #c9a961; --gold-soft: #e5cf9a;
   --ok: #1d8f5a; --ok-bg: #f2faf6; --bad: #c0392b; --bad-bg: #fdf3f2;
+  --warn: #b7791f; --warn-bg: #fdf6ec;
   --ink: #1d2a3a; --muted: #55637a; --faint: #8a96a8;
   --line: #e4e9f0; --bg: #eef1f6; --card: #ffffff;
   --serif: Georgia, "Times New Roman", serif;
@@ -41,6 +42,7 @@ a { color: var(--navy); }
 .banner.ok { border-color: var(--ok); background: var(--ok-bg); } .banner.ok .eyebrow { color: var(--ok); }
 .banner.bad { border-color: var(--bad); background: var(--bad-bg); } .banner.bad .eyebrow { color: var(--bad); }
 .banner.info { border-color: var(--navy); background: #f4f6fa; } .banner.info .eyebrow { color: var(--navy); }
+.banner.warn { border-color: var(--warn); background: var(--warn-bg); } .banner.warn .eyebrow { color: var(--warn); }
 
 .kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
 .kv span { color: var(--muted); } .kv b { color: var(--navy); text-align: right; word-break: break-word; }
