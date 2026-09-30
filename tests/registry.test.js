@@ -34,7 +34,7 @@ it("registerDocument inserts and returns already:false when new", async () => {
   expect(insert[1].method).toBe("POST");
   expect(insert[1].auth).toBe(true);
   expect(insert[1].body.issuer_id).toBe("issuer-123");
-  expect(insert[1].body).toMatchObject({ file_name: "b.pdf", file_size: 1 });
+  expect(insert[1].body).toMatchObject({ file_name: "b.pdf", file_size: 1, anchor_status: "pending" });
 });
 
 it("resolveVerdict is AUTHENTIC from the chain even when the DB throws", async () => {

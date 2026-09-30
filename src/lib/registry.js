@@ -18,7 +18,7 @@ export async function registerDocument(bytes, fileName, size) {
   if (existing) return { record: existing, already: true };
   const inserted = await supabaseQuery("documents", {
     method: "POST", auth: true,
-    body: { hash, file_name: fileName, file_size: size, issuer_id: currentUserId() },
+    body: { hash, file_name: fileName, file_size: size, issuer_id: currentUserId(), anchor_status: "pending" },
   });
   return { record: inserted[0], already: false };
 }

@@ -27,6 +27,7 @@ export default function Register() {
     setRec(record);
     setAlready(already);
     if (!already) setPdfBlob(blob || null);
+    if (!already) doAnchor(record);
   };
 
   const onPdf = async (file) => {
@@ -49,9 +50,9 @@ export default function Register() {
     setBusy("");
   };
 
-  const doAnchor = async () => {
+  const doAnchor = async (doc = rec) => {
     setAnchor("busy");
-    try { setAnchor(await anchorOnChain(rec.hash)); }
+    try { setAnchor(await anchorOnChain(doc.hash)); }
     catch { setAnchor({ error: true }); }
   };
 
@@ -78,7 +79,6 @@ export default function Register() {
         <button className="btn quiet" onClick={() => { navigator.clipboard.writeText(publicUrl); setCopied(true); }}>
           {copied ? t.copied : t.copyLink}</button>
       </div>
-      {!anchor && <button className="btn" onClick={doAnchor} style={{ marginBottom: 8 }}>{t.anchorBtn}</button>}
       {anchor === "busy" && <Busy msg={t.anchoring} />}
       {anchor?.error && <div className="error-box">{t.anchorError}</div>}
       {anchor?.status && (<>

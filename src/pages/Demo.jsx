@@ -43,13 +43,14 @@ export default function Demo() {
       const file = await fetchDemoFile(sel.file);
       const { record, already } = await registerDocument(await file.arrayBuffer(), file.name, file.size);
       setRec(record); setAlready(already);
+      if (!already) doAnchor(record);
     } catch (e) { setErr(t.demoLoadError + e.message); }
     setBusy("");
   };
 
-  const doAnchor = async () => {
+  const doAnchor = async (doc = rec) => {
     setAnchor("busy");
-    try { setAnchor(await anchorOnChain(rec.hash)); }
+    try { setAnchor(await anchorOnChain(doc.hash)); }
     catch { setAnchor({ error: true }); }
   };
 
@@ -107,7 +108,6 @@ export default function Demo() {
               <div className="hashbox" style={{ fontSize: 13 }}>{publicUrl}</div>
             </div>
             {qr && <img src={qr} alt="QR" style={{ display: "block", margin: "8px 0" }} />}
-            {!anchor && <button className="btn" onClick={doAnchor}>{t.demoAnchorBtn}</button>}
             {anchor === "busy" && <Busy msg={t.anchoring} />}
             {anchor?.error && <div className="error-box">{t.anchorError}</div>}
             {anchor?.status && <Verdict kind="ok" title={t.anchoredOk} />}
