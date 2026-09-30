@@ -17,6 +17,9 @@ const CERT_COLORS = {
 //   emisorNombre, emisorCargo, emisorCompania, fechaRegistro,
 //   txHash, red, explorerUrl, autentico }
 export async function generateCertificatePdf(data) {
+  if (data.kind === "verificacion" && data.autentico !== true) {
+    throw new Error("Refusing to issue a verification certificate without an AUTHENTIC verdict.");
+  }
   const C = CERT_COLORS;
   const isReg = data.kind === "registro";
   const lang = data.lang || "es";
