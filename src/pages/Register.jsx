@@ -20,7 +20,7 @@ export default function Register() {
   const [anchor, setAnchor] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}` : "";
+  const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}?h=${rec.hash}` : "";
 
   const registerBytes = async (bytes, fileName, size, blob) => {
     const { record, already } = await registerDocument(bytes, fileName, size);

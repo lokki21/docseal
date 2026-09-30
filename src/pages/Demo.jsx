@@ -22,7 +22,7 @@ export default function Demo() {
   const [busy, setBusy] = useState("");
   const [err, setErr] = useState("");
 
-  const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}` : "";
+  const publicUrl = rec ? `${window.location.origin}/verify/${rec.public_id}?h=${rec.hash}` : "";
 
   useEffect(() => {
     if (!publicUrl) { setQr(""); return; }
